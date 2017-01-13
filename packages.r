@@ -58,7 +58,7 @@ if (is.na(num.cores)) {
     num.cores <- 1
 }
 
-p <- filter.installed.packages(c("BiRewire", "graph"))
+p <- filter.installed.packages(c("BiRewire", "graph", "markovchain"))
 if(length(p) > 0) {
     source("http://bioconductor.org/biocLite.R")
     biocLite(p)
@@ -66,10 +66,11 @@ if(length(p) > 0) {
 
 p <- filter.installed.packages(c("statnet", "tm", "optparse", "arules", "data.table", "plyr",
                                  "igraph", "zoo", "xts", "lubridate", "xtable", "ggplot2",
-                                 "reshape", "wordnet", "stringr", "yaml", "ineq",
+                                 "reshape", "wordnet", "stringr", "yaml", "ineq", "psych",
                                  "scales", "gridExtra", "scales", "RMySQL", "svglite",
                                  "RCurl", "mgcv", "shiny", "dtw", "httpuv", "devtools",
-                                 "corrgram", "logging", "png", "rjson", "lsa", "RJSONIO"))
+                                 "corrgram", "logging", "png", "rjson", "lsa", "RJSONIO",
+				 "corrplot", "markovchain", "GGally"))
 if(length(p) > 0) {
     install.packages(p, dependencies=T, verbose=F, quiet=T, Ncpus=num.cores)
 }
