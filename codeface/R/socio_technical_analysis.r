@@ -100,9 +100,14 @@ cor.mtest <- function(mat, conf.level = 0.95) {
     diag(lowCI.mat) <- diag(uppCI.mat) <- 1
     for (i in 1:(n - 1)) {
         for (j in (i + 1):n) {
-            tmp <- cor.test(mat[, i], mat[, j], conf.level = conf.level,
-                            method="spearman")
-            p.mat[i, j] <- p.mat[j, i] <- tmp$p.value
+            ## cor.test needs at least three observations
+            if (length(mat[,i ] < 3)) {
+                return(NULL)
+            } else {
+                tmp <- cor.test(mat[, i], mat[, j], conf.level = conf.level,
+                                method="spearman")
+                p.mat[i, j] <- p.mat[j, i] <- tmp$p.value
+            }
             ##lowCI.mat[i, j] <- lowCI.mat[j, i] <- tmp$conf.int[1]
             ##uppCI.mat[i, j] <- uppCI.mat[j, i] <- tmp$conf.int[2]
         }
@@ -378,12 +383,14 @@ do.quality.analysis <- function(conf, vcs.dat, quality.type, artifact.type, defe
     print(correlation.plot)
     dev.off()
 
-    pdf(file.path(corr.plot.path, "correlation_plot_color.pdf"),
-        width=7, height=7)
-    corrplot(corr.mat, p.mat=corr.test[[1]],
-             insig = "p-value", sig.level=0.05, method="pie", type="lower")
-    title(gen.plot.info(stats))
-    dev.off()
+    if (!is.null(corr.test)) {
+        pdf(file.path(corr.plot.path, "correlation_plot_color.pdf"),
+            width=7, height=7)
+        corrplot(corr.mat, p.mat=corr.test[[1]],
+                 insig = "p-value", sig.level=0.05, method="pie", type="lower")
+        title(gen.plot.info(stats))
+        dev.off()
+    }
 
     write.csv(artifacts.dat, file.path(corr.plot.path, "quality_data.csv"))
 }
